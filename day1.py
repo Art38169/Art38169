@@ -1,3 +1,3 @@
-print("VeTIT") #A gold digger trigger a bigger nigger eating snickers.
+print("VeTIT") #A gold
 print(31**2)
 print(isinstance(False, int))
