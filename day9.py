@@ -10,4 +10,3 @@ print("My project uses luck only.")
 # REMOVE
 # last = l.pop() --> l = [1, 2], last = 3 || Supports index -> l.pop(1) will remove 2
 # l.remove(2) --> l = [1, 3] || If not in the list, gives error
-# 
