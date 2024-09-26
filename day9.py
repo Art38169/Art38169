@@ -1,7 +1,7 @@
 print("My project uses luck only.")
 # List
 # empty_list = [] OR list() || numbers = [1, 2, 3, 4]
-# my_list = [1, 0.2, True, "Vetit", None, [2, 3, 4], print(), input(), empty_list]
+my_list = [1, 0.2, True, "Vetit", None, [2, 3, 4]]
 # Slice list, get list.
 # ADD
 # l = [1, 2, 3],  l.append(4) --> l = [1, 2, 3, 4] || append is to put at last.
