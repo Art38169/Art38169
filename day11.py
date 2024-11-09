@@ -13,7 +13,7 @@ animals_legs = {"horse": 4, "human": 2, "centipede": [30, 350]}
 # print(animals_legs.get("centipede"))
 animals_legs["horse"] = 6 # change value
 animals_legs["fish"] = 0 # add key-value pair
-
+print(animals_legs)
 
 
 

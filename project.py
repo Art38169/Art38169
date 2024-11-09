@@ -106,7 +106,7 @@ map_data = [
     "G",
     "G",
 ]
-
+# Your stats
 user_data = {
     "current_HP": 40,
     "max_HP": 40,
@@ -122,25 +122,27 @@ user_data = {
     "point": 0,
 }
 
+# Your dice
 moving_dice = [-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
+# List of monster
 monster_list = {
-    "A": {"HP": 15, "current_HP": 15, "attack": 2, "exp": 5},
-    "B": {"HP": 30, "current_HP": 30, "attack": 3, "exp": 9},
-    "C": {"HP": 75, "current_HP": 75, "attack": 1, "exp": 11},
-    "D": {"HP": 40, "current_HP": 40, "attack": 5, "exp": 14},
-    "E": {"HP": 50, "current_HP": 50, "attack": 7, "exp": 18},
+    "A": {"HP": 10, "current_HP": 10, "attack": 2, "exp": 5},
+    "B": {"HP": 20, "current_HP": 20, "attack": 3, "exp": 9},
+    "C": {"HP": 70, "current_HP": 70, "attack": 1, "exp": 11},
+    "D": {"HP": 35, "current_HP": 35, "attack": 4, "exp": 14},
+    "E": {"HP": 45, "current_HP": 45, "attack": 5, "exp": 18},
     "F": {"HP": 60, "current_HP": 60, "attack": 4, "exp": 20},
     "G": {"HP": 100, "current_HP": 100, "attack": 10, "exp": 30},
 }
 
-
+# Heal when finished fighting
 def heal(hp):
     user_data["current_HP"] += hp
     if user_data["current_HP"] > user_data["max_HP"]:
         user_data["current_HP"] = user_data["max_HP"]
 
-
+# When use the item in dictionary
 def use_inventory():
     if (
         user_data["inventory"]["HP_Potion"] == 0
@@ -165,6 +167,8 @@ def use_inventory():
         user_data["max_HP"] += 10
         user_data["current_HP"] += 10
         user_data["inventory"]["HP_Potion"] -= 1
+        print(f"Your current health is now {user_data["current_HP"]}")
+        time.sleep(3)
         return False
 
     if user_data["inventory"]["Dice_fixer"] <= 0:
@@ -183,11 +187,14 @@ def use_inventory():
         return True
     return False
 
-
+# Rolling the dice
 def dice_move():
+    input("Roll the dice to see what you get.(Press enter to continue)")
     move = random.choice(
         moving_dice
     )
+    print(f"You get {move}.")
+    time.sleep(0.75)
     print(f"Move {move} squares")
     user_data["point"] += move
     if user_data["point"] < 0:
@@ -196,7 +203,7 @@ def dice_move():
         user_data["point"] = 100
     print(f"You are now at point {user_data["point"]}")
 
-
+# Level up and gaining exp
 def add_exp(exp):
     user_data["exp_user"] += exp
     while user_data["exp_user"] >= user_data["exp_needed"]:
@@ -218,35 +225,48 @@ def add_exp(exp):
         if user_data["level"] % 3 == 0:
             print(
                 "You can choose 1 of these 3 stats.\n 1. Critical Chance + 5%\
-                    \n 2. Add a better attack number\n 3. Delete your least attack number"
+                \n 2. Add a better attack number\n 3. Delete your least attack number"
             )
-            num_boost = int(input("Choose a boost by typing the number: "))
-            if num_boost == 1:
+            num_boost = input("Choose a boost by typing the number: ")
+            if num_boost == "1":
                 print("You have chosen critical chance + 5%")
                 user_data["crit_yes"] += 0.05
                 user_data["crit_no"] -= 0.05
-            elif num_boost == 2:
+            elif num_boost == "2":
                 print("You have chosen to add a better attack number.")
                 user_data["attack_dice"].append(max(user_data["attack_dice"]) + 1)
-            else:
+            elif num_boost == "3":
                 print("You have decided to delete your least attack number.")
                 user_data["attack_dice"].remove(min(user_data["attack_dice"]))
+            else:
+                print("You fucker. You gain nothing for that.")
 
         if user_data["level"] % 3 != 0:
             print(
                 "You can choose 1 of these 2 stats.\n 1. Critical Chance + 5%\
-                    \n 2. Add a better attack number"
+                \n 2. Add a better attack number"
             )
-            num_boost = int(input("Choose a boost by typing the number: "))
-            if num_boost == 1:
+            num_boost = input("Choose a boost by typing the number: ")
+            if num_boost == "1":
                 print("You have chosen critical chance + 5%")
                 user_data["crit_yes"] += 0.05
                 user_data["crit_no"] -= 0.05
-            else:
+            elif num_boost == "2":
                 print("You have chosen to add a better attack number.")
                 user_data["attack_dice"].append(max(user_data["attack_dice"]) + 1)
+            else:
+                print("You fucker. You gain nothing for that.")
+    input(f"Your current stats\
+        \n Current health: {user_data["current_HP"]}\
+        \nMaximum HP: {user_data["max_HP"]}\
+        \nAttack possibilies: {user_data["attack_dice"]}\
+        \nCritical Chance: {round(user_data["crit_yes"], 2)}\
+        \nCritical range: {user_data['crit_damage_min']} - {user_data['crit_damage_max']}\
+        \nLevel: {user_data["level"]}\
+        \nExp: {user_data["exp_user"]}/{user_data["exp_needed"]} ")        
+        
 
-
+# Treasure box
 def treasure_event():
     print("You found treasure")
     time.sleep(1)
@@ -267,14 +287,18 @@ def treasure_event():
     elif treasure_get == 1:
         print("You found Critical Damage max + 1.0")
         user_data["crit_damage_max"] += 1.0
+        print(f"Your new critical range is {user_data["crit_damage_min"]} -\
+         {user_data["crit_damage_max"]}")
     elif treasure_get == 2:
         print("You found max health + 10 and your health + 10")
         user_data["max_HP"] += 10
         user_data["current_HP"] += 10
+        print(f"Your current health is now {user_data["current_HP"]}")
     elif treasure_get == 3:
         print("You found critical chance + 5%")
         user_data["crit_yes"] += 0.05
         user_data["crit_no"] -= 0.05
+        print(f"Your critical chance is now {round(user_data["crit_yes"], 2)}")
     elif treasure_get == 4:
         print("You found Dice fixer")
         user_data["inventory"]["Dice_fixer"] += 1
@@ -283,10 +307,10 @@ def treasure_event():
         add_exp(10)
     else:
         print("You get nothing?!?! Lol")
-    input("Press any key to continue")
+    input("Press enter to continue")
     return
 
-
+#Battle Phase
 def monster_event(event):
     monster = monster_list[event].copy()
     print(f"Found monster {event}")
@@ -294,16 +318,16 @@ def monster_event(event):
     time.sleep(1)
     while True:
         # Player Attack
-        input("\n\nYour turn: Press any key to Attack")
+        input("\n\nYour turn: Press enter to Attack")
         attack = random.choice(user_data["attack_dice"])
-        crit_list = [True, False]
+        crit_list = ["yes", "no"]
         crit_bool = random.choices(
             crit_list, weights=[user_data["crit_yes"], user_data["crit_no"]]
         )
         crit_multiply = random.uniform(
             user_data["crit_damage_min"], user_data["crit_damage_max"]
         )
-        if not crit_bool:
+        if crit_bool == ["no"]:
             dmg_player = attack
         else:
             dmg_player = attack * crit_multiply
@@ -314,19 +338,20 @@ def monster_event(event):
         time.sleep(0.5)
         if monster["current_HP"] <= 0:
             print("You kill the monster!")
-            input("Press any key to continue")
+            input("Press enter to continue")
             break
         # Monster attack
         dmg_monster = monster["attack"]
         user_data["current_HP"] -= dmg_monster
-        print("Moster turn")
-        print(f"Monster deal {dmg_monster} dmg, Your hp is {user_data["current_HP"]}")
+        print("Monster turn")
+        print(f"Monster deals {dmg_monster} dmg, Your hp is now {user_data["current_HP"]}")
         time.sleep(0.5)
         if user_data["current_HP"] <= 0:
             print("You die!")
-            input("Press any key to continue")
+            input("Press enter to continue")
             return False
-    heal(5)  # Additional feature
+    heal(10)  # Finished fighting
+    input("You have recovered 10 health. (Press enter to continue.)")
     if user_data["point"] == 100:
         return True
     os.system("cls" if os.name == "nt" else "clear")
@@ -345,47 +370,53 @@ def map_event():
 
     return monster_event(event)
 
-
-os.system("cls" if os.name == "nt" else "clear")
+# Intro to the game
 intro_game = input("Welcome to the game.\nPlease enter your name: ")
 print("Hi, " + intro_game)
 print("Welcome to the game. Type 's' to start the game")
+
 start = input()
 os.system("cls" if os.name == "nt" else "clear")
 if start == "s":
-    print("You are trapped inside a dimension by a witch in a place called LUCKY LAND.")
-print("This place was once a dream for gamblers, but now it's a living hell.")
-print("In order to escape this place, you have to defeat the boss monsters.")
-print("Will you continue? (Press 'c' to continue)")
-con_tinue = input()
-os.system("cls" if os.name == "nt" else "clear")
-if con_tinue == "c":
-    print("How to play")
-    print("You will roll the moving dice. ")
-    print("You will then fight monsters, gain levels, and beat the boss monster.")
-input("Press any key to continue")
-os.system("cls" if os.name == "nt" else "clear")
-
-k = 0
-while True:
+    # Greeting message
+    print("You are trapped inside a dimension by a witch in a place called LUCK ISLAND.")
+    print("This place was once a dream for gamblers, but now it's a living hell.")
+    print("In order to escape this place, you have to defeat the boss monsters.")
+    print("Will you continue? (Press 'c' to continue)")
+    # Choose whether to continue or not
+    con_tinue = input()
     os.system("cls" if os.name == "nt" else "clear")
-    use_dice_fixer = use_inventory()
-    if not use_dice_fixer:
-        dice_move()
-    time.sleep(0.5)
-    survive = map_event()
-    if not survive:
+    
+    if con_tinue == "c":
+        # How to play the game
+        print("How to play")
+        print("You will roll the moving dice. ")
+        print("You will then fight monsters, gain levels, and beat the boss monster.")
+        input("Press enter to continue")
+        
         os.system("cls" if os.name == "nt" else "clear")
-        print(f"You survive for {k} rounds")
-        print(f'level: {user_data["level"]} | location: {user_data["point"]}')
-        break
-    k += 1
+        k = 0
+        while True:
+            os.system("cls" if os.name == "nt" else "clear")
+            # Check if use dice fixer or not
+            use_dice_fixer = use_inventory() 
+            if not use_dice_fixer: # if didn't use dice fixer
+                dice_move()
+            time.sleep(0.5)
+            # You win or lose
+            survive = map_event()
+            if not survive: # If you die
+                os.system("cls" if os.name == "nt" else "clear")
+                print(f"You survive for {k} rounds")
+                print(f'level: {user_data["level"]} | location: {user_data["point"]}')
+                break
+            k += 1 # Count turn
 
-    if user_data["point"] == 100:
-        os.system("cls" if os.name == "nt" else "clear")
-        print(f"You win in {k} rounds")
-        print(f'level: {user_data["level"]}')
-        break
+            if user_data["point"] == 100: # If you win
+                os.system("cls" if os.name == "nt" else "clear")
+                print(f"You win in {k} rounds")
+                print(f"level: {user_data["level"]}")
+                break
 
             
             
