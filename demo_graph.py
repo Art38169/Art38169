@@ -9,7 +9,7 @@ logger.info("Program started")
 
 
 def f(x):
-    return x
+    return x ** 2
 
 pygame.init()
 
@@ -29,11 +29,11 @@ while running:
         
     screen.fill((0,0,0))
     
-    # x = -2
-    for i in range(w):
-        y = f(i)
-        screen.set_at((i, w - y), (255, 255, 255))
-        # x += 4/100
+    x = -2
+    for i in range(1001):
+        y = f(x)
+        screen.set_at((int(150 * x +300), int(600 - 60 * y)), (255, 255, 255))
+        x += 4/1000
         
         
     pygame.display.flip()
